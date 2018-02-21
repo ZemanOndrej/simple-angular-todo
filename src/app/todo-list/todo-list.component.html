@@ -1,0 +1,21 @@
+<div>
+  <label>Todo text:
+    <input #text />
+  </label>
+  <button (click)="addTodo(text.value); text.value=''">
+    add
+  </button>
+</div>
+<ul>
+  <li *ngFor="let todo of todos">
+
+
+
+    <span class="badge">{{todo.id}}</span>
+    <input type="checkbox" name="completed todo" [(ngModel)]="todo.completed" (ngModelChange)="editState(todo)">
+    <span ng-class="{'completedTodo': todo.completed}"> 
+      {{todo.text}}
+    </span>
+    <button class="delete" title="delete todo" (click)="deleteTodo(todo)">x</button>
+  </li>
+</ul>
