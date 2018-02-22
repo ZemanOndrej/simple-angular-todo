@@ -10,9 +10,13 @@
   <li *ngFor="let todo of todos">
     <span class="badge">{{todo.id}}</span>
     <input type="checkbox" name="completed todo" [(ngModel)]="todo.completed" (ngModelChange)="editState(todo)">
-    <span [ngStyle]="{'text-decoration':todo.completed ? 'line-through': 'none'}"> 
+    <span [ngStyle]="{'text-decoration':todo.completed ? 'line-through': 'none','display':todo.isEditing?'none':'inline'}" (click)="editTodo(todo)">
       {{todo.text}}
     </span>
+    <div [ngStyle]="{'display':!todo.isEditing?'none':'inline'}">
+      <input type="textarea" name="edit todo" [(ngModel)]="todo.text" (blur)="saveTodo(todo)">
+      <button class="save" title="save todo" (click)="saveTodo(todo)">save</button>
+    </div>
     <button class="delete" title="delete todo" (click)="deleteTodo(todo)">x</button>
   </li>
 </ul>

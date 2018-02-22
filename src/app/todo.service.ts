@@ -12,45 +12,55 @@ export class TodoService {
   constructor() { }
 
   getTodos(): Observable<Todo[]> {
-    let list: Array<Todo> = JSON.parse(localStorage.getItem(listName));
-
-    if (!list) {
-      list = [];
-    }
-    return of(list);
+    return of(this.getStorage());
   }
 
   addTodo(todo: Todo): Observable<Todo> {
-    let list: Array<Todo> = JSON.parse(localStorage.getItem(listName));
-    if (!list) {
-      list = []
-    }
+    let list = this.getStorage();
     todo.id = Math.max.apply(Math, list.map(function (o) { return o.id; })) + 1;
     if (todo.id === -Infinity) {
       todo.id = 1;
     }
     todo.completed = false;
     list.push(todo);
-    localStorage.setItem(listName, JSON.stringify(list));
+    this.updateStorage(list);
     return of(todo);
   }
 
   deleteTodo(todo: Todo | number): Observable<Todo> {
     const id = typeof todo === 'number' ? todo : todo.id;
-    let list: Array<Todo> = JSON.parse(localStorage.getItem(listName));
+    let list = this.getStorage();
     todo = list.find(t => t.id === id);
-    localStorage.setItem(listName, JSON.stringify(list.filter(t => t !== todo)))
+    this.updateStorage(list.filter(t => t !== todo));
+
     return of(todo);
 
   }
 
   updateTodo(todo: Todo): Observable<Todo> {
-    let list: Array<Todo> = JSON.parse(localStorage.getItem(listName));
+    let list = this.getStorage();
     list = list.map(
       el => el.id === todo.id ? Object.assign(el, todo) : el
     );
-    localStorage.setItem(listName, JSON.stringify(list));
+    this.updateStorage(list);
     return of(todo);
 
+  }
+
+  private updateStorage(todos: Array<Todo>): void {
+    todos.forEach((part, index) => {
+      delete todos[index].isEditing;
+    });
+    localStorage.setItem(listName, JSON.stringify(todos));
+  }
+
+  private getStorage(): Array<Todo> {
+
+    let tmp = localStorage.getItem(listName)
+    if (!tmp || tmp == undefined || tmp === "undefined") {
+      tmp = "[]";
+    }
+
+    return JSON.parse(tmp) as Array<Todo>;
   }
 }
