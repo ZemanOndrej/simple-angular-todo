@@ -32,8 +32,6 @@ export class TodoListComponent implements OnInit {
     this.todoService.deleteTodo(todo).subscribe();
   }
   editState(todo: Todo): void{
-    console.log(todo)
-    todo.completed =!todo.completed;
     this.todos = this.todos.map(el => {
       if (el.id === todo.id){
         return Object.assign( el, todo);
