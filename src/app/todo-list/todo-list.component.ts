@@ -22,15 +22,15 @@ export class TodoListComponent implements OnInit {
     text = text.trim();
     if (!text) return;
 
-    this.todoService.addTodo({ text } as Todo)
+    this.todoService.addTodo(new Todo({text: text }))
       .subscribe(t => {
         this.todos.push(t);
       });
   }
 
-  deleteTodo(todo: Todo): void {
+  removeTodo(todo: Todo): void {
     this.todos = this.todos.filter(t => t !== todo);
-    this.todoService.deleteTodo(todo).subscribe();
+    this.todoService.removeTodo(todo).subscribe();
   }
 
   editState(todo: Todo): void {

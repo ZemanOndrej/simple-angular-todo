@@ -3,8 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Todo } from './todo';
 import { of } from 'rxjs/observable/of';
 import { JsonPipe } from '@angular/common';
-
-const listName = 'NGTodoList';
+import {AppSettings}from "./app-settings";
 
 @Injectable()
 export class TodoService {
@@ -27,7 +26,7 @@ export class TodoService {
     return of(todo);
   }
 
-  deleteTodo(todo: Todo | number): Observable<Todo> {
+  removeTodo(todo: Todo | number): Observable<Todo> {
     const id = typeof todo === 'number' ? todo : todo.id;
     let list = this.getStorage();
     todo = list.find(t => t.id === id);
@@ -51,12 +50,12 @@ export class TodoService {
     todos.forEach((part, index) => {
       delete todos[index].isEditing;
     });
-    localStorage.setItem(listName, JSON.stringify(todos));
+    localStorage.setItem(AppSettings.STORAGE_NAME, JSON.stringify(todos));
   }
 
   private getStorage(): Array<Todo> {
 
-    let tmp = localStorage.getItem(listName)
+    let tmp = localStorage.getItem(AppSettings.STORAGE_NAME)
     if (!tmp || tmp == undefined || tmp === "undefined") {
       tmp = "[]";
     }
